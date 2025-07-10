@@ -1,0 +1,63 @@
+<div class="container my-5">
+  <h1 class="text-success fw-bold mb-4 text-center">
+    🛒 Your Cart
+  </h1>
+
+  <% if @cart_items.any? %>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      <% @cart_items.each do |item| %>
+        <div class="col">
+          <div class="card h-100 shadow-sm">
+            <% if item.dewback.image_file.attached? %>
+              <%= image_tag url_for(item.dewback.image_file), class: "card-img-top", alt: item.dewback.title %>
+            <% elsif item.dewback.image.present? %>
+              <%= image_tag asset_path(item.dewback.image), class: "card-img-top", alt: item.dewback.title %>
+            <% else %>
+              <%= image_tag "placeholder.png", class: "card-img-top", alt: "No image available" %>
+            <% end %>
+
+            <div class="card-body">
+              <h5 class="card-title">
+                <%= link_to item.dewback.title, dewback_path(item.dewback), class: "text-decoration-none text-dark" %>
+              </h5>
+              <p class="mb-1"><strong>💲 Price:</strong> <%= number_to_currency(item.dewback.price) %></p>
+              <p class="mb-1"><strong>📏 Size:</strong> <%= item.dewback.size.capitalize %></p>
+              <p class="mb-1"><strong>📦 Load:</strong> <%= item.dewback.max_load.capitalize %></p>
+              <p class="mb-1"><strong>⚡ Speed:</strong> <%= item.dewback.max_speed.capitalize %></p>
+              <p class="mb-2"><strong>🍽️ Food:</strong> <%= item.dewback.food_requirements.capitalize %></p>
+              <p class="text-muted small"><%= truncate(item.dewback.description, length: 100) %></p>
+            </div>
+
+            <div class="card-footer bg-light border-top">
+              <div class="d-flex align-items-center justify-content-between">
+                <%= form_with url: cart_path, method: :patch, local: true, class: "d-flex align-items-center gap-2" do %>
+                  <%= hidden_field_tag :dewback_id, item.dewback_id %>
+                  <%= number_field_tag :quantity, item.quantity, min: 1, class: "form-control form-control-sm w-auto" %>
+                  <%= submit_tag "Update", class: "btn btn-outline-primary btn-sm" %>
+                <% end %>
+
+                <%= button_to "🗑️ Remove",
+                              cart_path(dewback_id: item.dewback_id),
+                              method: :delete,
+                              data: { confirm: "Remove this item?" },
+                              class: "btn btn-outline-danger btn-sm" %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="d-flex flex-column flex-md-row justify-content-end align-items-center mt-5">
+      <h4 class="me-md-4 mb-3 mb-md-0 text-primary">
+        Total: <%= number_to_currency(@cart_items.sum { |i| i.dewback.price * i.quantity }) %>
+      </h4>
+      <%= link_to "✅ Proceed to Checkout", new_order_path, class: "btn btn-success btn-lg" %>
+    </div>
+  <% else %>
+    <div class="text-center mt-5">
+      <p class="lead text-muted">🛒 Your cart is currently empty.</p>
+      <%= link_to "Browse Dewbacks", catalog_index_path, class: "btn btn-outline-primary" %>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,86 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+  <div class="container-fluid">
+    <%= link_to "🐫 Dewback Shop", root_path, class: "navbar-brand fw-bold text-success" %>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+      aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav ms-auto align-items-center">
+
+        <li class="nav-item">
+          <%= link_to "🏠 Home", root_path, class: "nav-link" %>
+        </li>
+
+        <li class="nav-item">
+          <%= link_to "📈 Trade Market", trade_market_path, class: "nav-link" %>
+        </li>
+
+        <li class="nav-item">
+          <%= link_to "🦎 My Dewbacks", my_dewbacks_path, class: "nav-link" %>
+        </li>
+
+        <% if user_signed_in? %>
+          <% unread_count = current_user.notifications.where(read: false).count %>
+
+          <li class="nav-item">
+            <%= link_to "💖 Wishlist", wishlists_path, class: "nav-link" %>
+          </li>
+
+          <li class="nav-item">
+            <%= link_to "👤 Edit Profile", edit_profile_path, class: "nav-link" %>
+          </li>
+
+          <li class="nav-item position-relative">
+            <%= link_to notifications_path, class: "nav-link position-relative" do %>
+              🔔 Notifications
+              <% if unread_count.positive? %>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                  <%= unread_count %>
+                  <span class="visually-hidden">unread notifications</span>
+                </span>
+              <% end %>
+            <% end %>
+          </li>
+
+          <% if current_user.admin? %>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                ⚙️ Admin
+              </a>
+              <ul class="dropdown-menu">
+                <li><%= link_to "📋 Manage Listings", new_admin_dewback_path, class: "dropdown-item" %></li>
+                <li><%= link_to "👥 User Management", admin_users_path, class: "dropdown-item" %></li>
+              </ul>
+            </li>
+          <% end %>
+
+          <li class="nav-item">
+            <%= link_to "🛒 Cart (#{current_user.cart_item_count})", cart_path, class: "nav-link" %>
+          </li>
+
+          <li class="nav-item">
+            <span class="nav-link disabled text-muted small">
+              Signed in as <strong><%= current_user.email %></strong>
+            </span>
+          </li>
+
+          <li class="nav-item">
+            <%= button_to "🚪 Logout", destroy_user_session_path, method: :delete,
+                form_class: "d-inline", class: "btn btn-link nav-link text-danger" %>
+          </li>
+
+        <% else %>
+          <li class="nav-item">
+            <%= link_to "🔐 Login", new_user_session_path, class: "nav-link" %>
+          </li>
+          <li class="nav-item">
+            <%= link_to "📝 Sign Up", new_user_registration_path, class: "nav-link" %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</nav>

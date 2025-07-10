@@ -1,0 +1,2 @@
+module TradeInboxHelper
+end

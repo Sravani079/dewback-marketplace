@@ -1,0 +1,32 @@
+<div class="container my-5">
+  <h2 class="text-center text-primary mb-4">👥 All Users</h2>
+
+  <div class="table-responsive">
+    <table class="table table-hover table-bordered align-middle shadow-sm">
+      <thead class="table-light text-center">
+        <tr>
+          <th scope="col">📧 Email</th>
+          <th scope="col">🔐 Role</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @users.each do |user| %>
+          <tr class="text-center">
+            <td class="fw-semibold"><%= user.email %></td>
+            <td>
+              <span class="badge <%= user.admin? ? 'bg-success' : 'bg-secondary' %>">
+                <%= user.admin? ? "Admin" : "User" %>
+              </span>
+              <% unless user.admin? %>
+                <%= button_to "Promote", promote_admin_user_path(user),
+                              method: :patch,
+                              class: "btn btn-sm btn-warning ms-2",
+                              data: { turbo_confirm: "Are you sure you want to promote this user to admin?" } %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

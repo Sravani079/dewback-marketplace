@@ -1,0 +1,122 @@
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <h2 class="card-title mb-4 text-center">Checkout</h2>
+
+          <% if @cart_items.any? %>
+            <%= form_with model: @order, url: orders_path, local: true do |f| %>
+              <div class="mb-3">
+                <%= f.label :name, "Full Name", class: "form-label fw-semibold" %>
+                <%= f.text_field :name, class: "form-control", required: true, placeholder: "John Doe" %>
+              </div>
+
+              <div class="mb-3">
+                <%= f.label :delivery_method, "Delivery Method", class: "form-label fw-semibold" %>
+                <%= f.select :delivery_method,
+                             [["Shipping", "shipping"], ["Pick-up", "pickup"]],
+                             { prompt: "Select one" },
+                             class: "form-select", required: true %>
+              </div>
+                              
+              <div class="mb-3">
+                <%= f.label :address, "Shipping Address", class: "form-label fw-semibold" %>
+                <%= f.text_area :address, class: "form-control", rows: 3, required: true,
+                                placeholder: "123 Main Street, City, ZIP Code" %>
+              </div>
+
+              <% if @saved_payment_methods.present? %>
+                <div class="mb-3">
+                  <label for="saved_payment_method_id" class="form-label fw-semibold">Use a Saved Payment Method</label>
+                  <select name="saved_payment_method_id" id="saved-payment-method-select" class="form-select">
+                    <option value="">-- Select a saved card (or enter new below) --</option>
+                    <% @saved_payment_methods.each do |pm| %>
+                      <option value="<%= pm.id %>">
+                        <%= "#{pm.method_type.titleize} ending in #{pm.last4} (exp #{pm.exp_month}/#{pm.exp_year})" %>
+                      </option>
+                    <% end %>
+                  </select>
+                </div>
+              <% end %>
+
+              <div class="mb-3">
+                <%= f.label :payment_method, "Payment Method", class: "form-label fw-semibold" %>
+                <%= f.select :payment_method,
+                             [["Credit Card", "credit_card"], ["Debit Card", "debit_card"], ["PayPal", "paypal"]],
+                             { prompt: "Select one" },
+                             class: "form-select", id: "payment-method-select", required: true %>
+              </div>
+
+              <!-- Hidden field for controller param -->
+              <input type="hidden" name="payment_method_type" id="payment-method-type-hidden">
+
+              <!-- Card Details Section -->
+              <div id="card-details" style="display: none;">
+                <div class="mb-3">
+                  <label for="card-number" class="form-label fw-semibold">Card Number</label>
+                  <input type="text" name="card_number" id="card-number" class="form-control" placeholder="1234 5678 9012 3456">
+                </div>
+                <div class="mb-3">
+                  <label for="expiry-date" class="form-label fw-semibold">Expiry Date</label>
+                  <input type="text" name="expiry_date" id="expiry-date" class="form-control" placeholder="MM/YY">
+                </div>
+                <div class="mb-3">
+                  <label for="cvv" class="form-label fw-semibold">CVV</label>
+                  <input type="text" name="cvv" id="cvv" class="form-control" placeholder="123">
+                </div>
+
+                <div class="form-check mb-3">
+                  <input class="form-check-input" type="checkbox" name="save_payment_method" id="save-payment-method">
+                  <label class="form-check-label" for="save-payment-method">
+                    Save this payment method for future use
+                  </label>
+                </div>
+              </div>
+
+              <div class="d-grid">
+                <%= f.submit "Place Order", class: "btn btn-primary btn-lg" %>
+              </div>
+            <% end %>
+          <% else %>
+            <div class="alert alert-warning text-center" role="alert">
+              Your cart is empty. Add items before checking out.
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript for dynamic card field display + hidden field sync -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const methodSelect = document.getElementById("payment-method-select");
+    const hiddenField = document.getElementById("payment-method-type-hidden");
+    const cardDetails = document.getElementById("card-details");
+    const savedMethodSelect = document.getElementById("saved-payment-method-select");
+
+    function updateState() {
+      const selectedType = methodSelect.value;
+      const savedMethodSelected = savedMethodSelect && savedMethodSelect.value !== "";
+
+      hiddenField.value = selectedType;
+
+      const showCardFields = (selectedType === "credit_card" || selectedType === "debit_card") && !savedMethodSelected;
+
+      cardDetails.style.display = showCardFields ? "block" : "none";
+
+      if (!showCardFields) {
+        document.getElementById("card-number").value = '';
+        document.getElementById("expiry-date").value = '';
+        document.getElementById("cvv").value = '';
+        document.getElementById("save-payment-method").checked = false;
+      }
+    }
+
+    methodSelect.addEventListener("change", updateState);
+    if (savedMethodSelect) savedMethodSelect.addEventListener("change", updateState);
+    updateState(); // Initial load
+  });
+</script>

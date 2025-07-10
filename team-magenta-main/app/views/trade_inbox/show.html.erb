@@ -1,0 +1,55 @@
+<div class="container mt-5">
+  <% if flash[:notice] %>
+    <div class="alert alert-success text-center">
+      <%= flash[:notice] %>
+    </div>
+  <% elsif flash[:alert] %>
+    <div class="alert alert-danger text-center">
+      <%= flash[:alert] %>
+    </div>
+  <% end %>
+
+  <h2 class="text-center mb-4">📄 Trade Proposal Details</h2>
+
+  <% if @proposal %>
+    <div class="card mb-4 shadow-sm">
+      <div class="card-body">
+        <p><strong>Proposed by:</strong> <%= @proposal.proposer.email %></p>
+
+        <div class="row">
+          <div class="col-md-6">
+            <h5 class="text-success">🟢 Offered Dewbacks</h5>
+            <ul class="list-group">
+              <% @proposal.offered_dewbacks.each do |od| %>
+                <li class="list-group-item"><%= od.dewback.title %></li>
+              <% end %>
+            </ul>
+          </div>
+
+          <div class="col-md-6">
+            <h5 class="text-danger">🔴 Requested Dewbacks</h5>
+            <ul class="list-group">
+              <% @proposal.requested_dewbacks.each do |rd| %>
+                <li class="list-group-item"><%= rd.dewback.title %></li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-center gap-3">
+      <% if @proposal.status == "pending" %>
+        <%= button_to "✅ Accept", accept_trade_inbox_path(@proposal), method: :post, class: "btn btn-success btn-lg" %>
+        <%= button_to "❌ Reject", reject_trade_inbox_path(@proposal), method: :post, class: "btn btn-danger btn-lg" %>
+        <%= link_to "♻️ Counter", counter_trade_proposal_path(@proposal), class: "btn btn-warning btn-lg" %>
+      <% else %>
+        <span class="badge bg-info text-dark fs-5">Status: <%= @proposal.status.capitalize %></span>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="alert alert-warning text-center">
+      No trade proposal found.
+    </div>
+  <% end %>
+</div>

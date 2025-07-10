@@ -1,0 +1,60 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# == Schema Information
+#
+# Table name: dewbacks
+#
+#  id                  :bigint           not null, primary key
+#  available_for_trade :boolean
+#  color               :string
+#  description         :text
+#  discounted_price    :decimal(, )
+#  food_requirements   :string
+#  image               :string
+#  max_load            :string
+#  max_speed           :string
+#  on_sale             :boolean          default(FALSE)
+#  price               :decimal(, )
+#  quantity            :integer
+#  size                :string
+#  title               :string
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  owner_id            :bigint
+#
+# Indexes
+#
+#  index_dewbacks_on_owner_id  (owner_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (owner_id => users.id)
+#
+one:
+  title: "Proposer's Dewback"
+  color: Green
+  size: Medium
+  max_speed: Fast
+  max_load: Moderate
+  food_requirements: Low
+  price: 100.00
+  quantity: 1
+  description: "Tradeable dewback owned by proposer"
+  image: ""
+  available_for_trade: true
+  owner: one
+
+two:
+  title: "Recipient's Dewback"
+  color: Brown
+  size: Large
+  max_speed: Slow
+  max_load: Heavy
+  food_requirements: High
+  price: 120.00
+  quantity: 1
+  description: "Dewback owned by recipient"
+  image: ""
+  available_for_trade: true
+  owner: two
+

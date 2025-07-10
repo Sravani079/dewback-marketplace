@@ -1,0 +1,40 @@
+<div class="container mt-5">
+  <h2 class="text-center mb-4">🔁 Counter Proposal</h2>
+
+  <%= form_with url: create_counter_trade_proposal_path(@original_proposal), method: :post, class: "card p-4 shadow-sm" do |f| %>
+    
+    <div class="mb-4">
+      <h5>Select Dewbacks to <span class="text-success">Offer</span>:</h5>
+      <div class="row">
+        <% @my_dewbacks.each do |dewback| %>
+          <div class="col-md-4">
+            <div class="form-check">
+              <%= check_box_tag "offered_dewback_ids[]", dewback.id, false, class: "form-check-input", id: "offer_#{dewback.id}" %>
+              <%= label_tag "offer_#{dewback.id}", dewback.title, class: "form-check-label" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <h5>Select Dewbacks to <span class="text-primary">Request</span>:</h5>
+      <div class="row">
+        <% @original_proposal.offered_dewbacks.each do |od| %>
+          <div class="col-md-4">
+            <div class="form-check">
+              <%= check_box_tag "requested_dewback_ids[]", od.dewback.id, false, class: "form-check-input", id: "request_#{od.dewback.id}" %>
+              <%= label_tag "request_#{od.dewback.id}", od.dewback.title, class: "form-check-label" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <%= hidden_field_tag :original_id, @original_proposal.id %>
+
+    <div class="text-center">
+      <%= f.submit "Send Counter Proposal", class: "btn btn-warning px-4" %>
+    </div>
+  <% end %>
+</div>

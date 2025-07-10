@@ -1,0 +1,27 @@
+# == Schema Information
+#
+# Table name: offered_dewbacks
+#
+#  id                :bigint           not null, primary key
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  dewback_id        :bigint           not null
+#  trade_proposal_id :bigint           not null
+#
+# Indexes
+#
+#  index_offered_dewbacks_on_dewback_id         (dewback_id)
+#  index_offered_dewbacks_on_trade_proposal_id  (trade_proposal_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (dewback_id => dewbacks.id)
+#  fk_rails_...  (trade_proposal_id => trade_proposals.id)
+#
+require "test_helper"
+
+class OfferedDewbackTest < ActiveSupport::TestCase
+  # test "the truth" do
+  #   assert true
+  # end
+end

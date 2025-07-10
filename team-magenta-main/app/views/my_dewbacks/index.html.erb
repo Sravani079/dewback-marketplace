@@ -1,0 +1,55 @@
+<div class="container mt-5">
+  <h1 class="text-center text-success mb-4">My Purchased Dewbacks</h1>
+
+  <% if @owned_dewbacks.any? %>
+    <% @owned_dewbacks.each do |owner| %>
+      <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+          <h2 class="card-title"><%= owner.dewback.title %></h2>
+          <p class="card-text"><strong>Purchased on:</strong> <%= owner.created_at.strftime('%B %d, %Y') %></p>
+          <p class="card-text">
+            <strong>Status:</strong>
+            <% if owner.available_for_trade %>
+              <span class="text-success fw-bold">Available for Trade</span>
+            <% else %>
+              <span class="text-muted">Not for Trade</span>
+            <% end %>
+          </p>
+
+          <div class="d-flex flex-wrap justify-content-center gap-3 mt-3">
+            <!-- Leave a review button -->
+            <%= link_to "Leave a Review",
+                        dewback_path(owner.dewback, anchor: 'leave-review-form'),
+                        class: "btn btn-success px-4 py-2" %>
+
+            <!-- View Order Details button (only if order exists) -->
+            <% if owner.order_id.present? %>
+              <% order = Order.find_by(id: owner.order_id) %>
+              <% if order.present? %>
+                <%= link_to "Order Details #{order.name.starts_with?('Trade between') ? '(Trade)' : '(Purchase)'}",
+                            order_path(order),
+                            class: "btn btn-info",
+                            style: "padding: 10px 20px; font-size: 16px; border-radius: 8px;" %>
+              <% end %>
+            <% end %>
+
+            <!-- Trade availability toggle -->
+            <% if owner.available_for_trade %>
+              <%= button_to "Remove from Trade",
+                            remove_from_trade_my_dewback_path(owner.dewback_id),
+                            method: :patch,
+                            class: "btn btn-danger px-4 py-2" %>
+            <% else %>
+              <%= button_to "Mark for Trade",
+                            mark_for_trade_my_dewback_path(owner.dewback_id),
+                            method: :patch,
+                            class: "btn btn-warning text-white px-4 py-2" %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  <% else %>
+    <p class="text-center text-muted fs-5">You have not purchased any Dewbacks yet.</p>
+  <% end %>
+</div>

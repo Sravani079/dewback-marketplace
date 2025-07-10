@@ -1,0 +1,80 @@
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <div class="card shadow-lg border-0">
+        <div class="card-body p-5">
+
+          <h2 class="card-title text-center text-success fw-bold mb-4">
+            🐲 Create New Dewback Listing
+          </h2>
+
+          <%= form_with model: @dewback, url: admin_dewbacks_path, local: true, html: { multipart: true } do |f| %>
+            <div class="mb-3">
+              <%= f.label :title, "📛 Dewback Name", class: "form-label fw-semibold" %>
+              <%= f.text_field :title, class: "form-control", placeholder: "Enter Dewback Name" %>
+            </div>
+
+            <div class="mb-3">
+              <%= f.label :color, "🎨 Color", class: "form-label fw-semibold" %>
+              <%= f.text_field :color, class: "form-control", placeholder: "Enter Color" %>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-4">
+                <%= f.label :size, "📏 Size", class: "form-label fw-semibold" %>
+                <%= f.select :size, Dewback::FILTER_OPTIONS[:size], { prompt: "Select Size" }, class: "form-select" %>
+              </div>
+
+              <div class="col-md-4">
+                <%= f.label :max_speed, "⚡ Max Speed", class: "form-label fw-semibold" %>
+                <%= f.select :max_speed, Dewback::FILTER_OPTIONS[:max_speed], { prompt: "Select Speed" }, class: "form-select" %>
+              </div>
+
+              <div class="col-md-4">
+                <%= f.label :max_load, "📦 Max Load", class: "form-label fw-semibold" %>
+                <%= f.select :max_load, Dewback::FILTER_OPTIONS[:max_load], { prompt: "Select Load Capacity" }, class: "form-select" %>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <%= f.label :price, "💲 Price ($)", class: "form-label fw-semibold" %>
+                <%= f.number_field :price, class: "form-control", placeholder: "Enter Price" %>
+              </div>
+
+              <div class="col-md-6">
+                <%= f.label :quantity, "📦 Stock Quantity", class: "form-label fw-semibold" %>
+                <%= f.number_field :quantity, class: "form-control", placeholder: "Enter Quantity" %>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <%= f.label :food_requirements, "🍽️ Food Requirements", class: "form-label fw-semibold" %>
+              <%= f.select :food_requirements, Dewback::FILTER_OPTIONS[:food_requirements], { prompt: "Select Food Requirement" }, class: "form-select" %>
+            </div>
+
+            <div class="mb-3">
+              <%= f.label :description, "📝 Description", class: "form-label fw-semibold" %>
+              <%= f.text_area :description, class: "form-control", rows: 4, placeholder: "Enter Dewback Description" %>
+            </div>
+
+            <div class="mb-3">
+              <%= f.label :image, "🖼️ Image Filename (Optional)", class: "form-label fw-semibold" %>
+              <%= f.text_field :image, class: "form-control", placeholder: "e.g., dewback1.jpg" %>
+            </div>
+
+            <div class="mb-3">
+              <%= f.label :image_file, "📂 Upload Image File", class: "form-label fw-semibold" %>
+              <%= f.file_field :image_file, class: "form-control" %>
+            </div>
+
+            <div class="text-center mt-4">
+              <%= f.submit "✅ Create Dewback", class: "btn btn-primary btn-lg px-5" %>
+            </div>
+          <% end %>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

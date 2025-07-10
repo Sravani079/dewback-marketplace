@@ -1,0 +1,38 @@
+<div class="container mt-5">
+  <h2 class="text-center mb-4">📤 Propose a Trade</h2>
+
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <p><strong>Trading with:</strong> <%= @recipient.email %></p>
+      <p><strong>Dewback you want:</strong> <%= @recipient_dewback.title %></p>
+    </div>
+  </div>
+
+  <%= form_with url: trade_proposals_path, method: :post, local: true do |f| %>
+    <%= hidden_field_tag :recipient_id, @recipient.id %>
+    <%= hidden_field_tag :recipient_dewback_id, @recipient_dewback.id %>
+
+    <div class="mb-3">
+      <label class="form-label"><strong>Select Dewbacks to Offer:</strong></label>
+      <% if @my_dewbacks.any? %>
+        <div class="row">
+          <% @my_dewbacks.each do |dewback| %>
+            <div class="col-md-4">
+              <div class="form-check">
+                <%= check_box_tag "offered_dewback_ids[]", dewback.id, false, class: "form-check-input", id: "dewback_#{dewback.id}" %>
+                <%= label_tag "dewback_#{dewback.id}", dewback.title, class: "form-check-label" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-muted">You have no dewbacks available for trade.</p>
+      <% end %>
+    </div>
+
+    <div class="text-center mt-4">
+      <%= f.submit "Submit Trade Proposal", class: "btn btn-success btn-lg" %>
+      <%= link_to "Cancel", trade_market_path, class: "btn btn-secondary btn-lg ms-3" %>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,42 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# == Schema Information
+#
+# Table name: payment_methods
+#
+#  id          :bigint           not null, primary key
+#  exp_month   :integer
+#  exp_year    :integer
+#  last4       :string
+#  method_type :string
+#  provider    :string
+#  token       :string
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  user_id     :bigint           not null
+#
+# Indexes
+#
+#  index_payment_methods_on_user_id  (user_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (user_id => users.id)
+#
+one:
+  user: one
+  provider: MyString
+  token: MyString
+  method_type: MyString
+  last4: MyString
+  exp_month: 1
+  exp_year: 1
+
+two:
+  user: two
+  provider: MyString
+  token: MyString
+  method_type: MyString
+  last4: MyString
+  exp_month: 1
+  exp_year: 1

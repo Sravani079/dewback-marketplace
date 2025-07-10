@@ -1,0 +1,31 @@
+<div style="max-width: 700px; margin: 40px auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f9f9f9; border: 1px solid #ccc; border-radius: 12px; padding: 30px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);">
+  <h1 style="color: #2E8B57; text-align: center; margin-bottom: 20px;">Order Confirmation</h1>
+
+  <p style="text-align: center; font-size: 18px; margin-bottom: 30px;">Thank you for your order! We appreciate your business.</p>
+
+  <div style="font-size: 16px;">
+    <h2 style="border-bottom: 1px solid #ccc; padding-bottom: 8px;">Order Details:</h2>
+
+    <p><strong>Name:</strong> <%= @order.name %></p>
+
+    <p><strong>Shipping Address:</strong> <%= @order.address %></p>
+
+    <p><strong>Payment Method:</strong> 
+      <% if @order.payment_method.present? %>
+        <%= @order.payment_method.to_s %>
+      <% else %>
+        Not Available
+      <% end %>
+    </p>
+
+    <p><strong>Delivery Method:</strong> <%= @order.delivery_method.capitalize %></p>
+
+    <p><strong>Dewback Name(s):</strong> <%= @order.dewback_name.presence || "None" %></p>
+
+    <p><strong>Number of Items:</strong> <%= @order.number_of_items %></p>
+  </div>
+
+  <div style="text-align: center; margin-top: 30px;">
+    <a href="/" style="display: inline-block; padding: 10px 20px; background-color: #2E8B57; color: white; text-decoration: none; border-radius: 6px; font-size: 16px;">Continue Shopping</a>
+  </div>
+</div>

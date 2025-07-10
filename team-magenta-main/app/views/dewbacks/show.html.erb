@@ -1,0 +1,119 @@
+<div class="container mt-5">
+
+  <!-- 🌾 Dewback Info -->
+  <div class="row">
+    <div class="col-md-5 d-flex align-items-center justify-content-center">
+      <% if @dewback.image_file.attached? %>
+        <%= image_tag url_for(@dewback.image_file), class: "img-fluid rounded shadow-sm", style: "max-height: 300px;" %>
+      <% elsif @dewback.image.present? %>
+        <%= image_tag asset_path(@dewback.image), class: "img-fluid rounded shadow-sm", style: "max-height: 300px;" %>
+      <% else %>
+        <%= image_tag "placeholder.png", class: "img-fluid rounded shadow-sm", style: "max-height: 300px;" %>
+      <% end %>
+    </div>
+
+    <div class="col-md-7">
+      <h2 class="fw-bold"><%= @dewback.title %></h2>
+      <p class="lead text-muted"><%= @dewback.description %></p>
+
+      <ul class="list-group list-group-flush mb-4">
+        <li class="list-group-item"><strong>Color:</strong> <%= @dewback.color %></li>
+        <li class="list-group-item"><strong>Size:</strong> <%= @dewback.size %></li>
+        <li class="list-group-item"><strong>Max Speed:</strong> <%= @dewback.max_speed %></li>
+        <li class="list-group-item"><strong>Max Load:</strong> <%= @dewback.max_load %></li>
+        <li class="list-group-item"><strong>Food Needs:</strong> <%= @dewback.food_requirements %></li>
+        <li class="list-group-item"><strong>Price:</strong> $<%= @dewback.price %></li>
+      </ul>
+
+      <div class="d-flex flex-wrap gap-3 align-items-center">
+        <% if user_signed_in? && current_cart.dewbacks.include?(@dewback) %>
+          <%= link_to 'Go to Cart', cart_path, class: 'btn btn-primary' %>
+        <% else %>
+          <%= button_to "Add to Cart", add_to_cart_path(@dewback), method: :post, class: "btn btn-primary" %>
+        <% end %>
+
+        <%= link_to "Back to Catalog", catalog_index_path, class: "btn btn-outline-secondary" %>
+
+        <% if @dewback.reviews.any? %>
+          <span class="badge bg-success">Average Rating: <%= @dewback.reviews.average(:rating).round(2) %> ⭐</span>
+        <% else %>
+          <span class="badge bg-warning text-dark p-2">Not Rated Yet</span>
+        <% end %>
+
+        <% if user_signed_in? %>
+          <% if @wishlist %>
+            <%= button_to 'Remove from Wishlist', wishlist_path(@wishlist), method: :delete, data: { confirm: 'Remove from wishlist?' }, class: 'btn btn-sm btn-danger' %>
+          <% else %>
+            <%= button_to 'Add to Wishlist', wishlists_path(dewback_id: @dewback.id), method: :post, class: 'btn btn-outline-primary btn-sm' %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <hr class="my-5">
+
+  <!-- ✍️ Reviews and Form -->
+  <div class="row g-4">
+    <!-- Left: Review Form -->
+    <div class="col-md-6 p-4 border rounded bg-light shadow-sm">
+      <h3 class="text-success text-center mb-4">Leave a Review</h3>
+
+      <% if user_signed_in? %>
+        <%= form_with(model: [@dewback, Review.new], local: true, html: { multipart: true }) do |f| %>
+          <div class="mb-3">
+            <%= f.label :rating, "Rating", class: "form-label fw-semibold" %>
+            <%= f.select :rating, options_for_select(1..5), {}, class: "form-select", required: true %>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :comment, "Comment", class: "form-label fw-semibold" %>
+            <%= f.text_area :comment, class: "form-control", rows: 4, placeholder: "Share your thoughts...", required: true %>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :image, "Upload an Image (optional)", class: "form-label fw-semibold" %>
+            <%= f.file_field :image, class: "form-control" %>
+          </div>
+
+          <div class="text-center mt-3">
+            <%= f.submit "Submit Review", class: "btn btn-success px-5 py-2" %>
+          </div>
+        <% end %>
+      <% else %>
+        <p class="text-center">
+          <%= link_to 'Log in', new_user_session_path, class: "btn btn-warning px-4" %> to leave a review.
+        </p>
+      <% end %>
+    </div>
+
+    <!-- Right: Reviews -->
+    <div class="col-md-6 p-4 border rounded shadow-sm">
+      <h3 class="text-primary text-center mb-4">Customer Reviews</h3>
+
+      <% if @dewback.reviews.any? %>
+        <% @dewback.reviews.each do |review| %>
+          <div class="mb-4 p-3 border-start border-4 border-primary rounded bg-white shadow-sm">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <strong><%= review.user.email %></strong>
+              <span class="text-warning fs-5">
+                <%= '⭐' * review.rating %>
+              </span>
+            </div>
+
+            <p class="mb-2 text-secondary"><%= review.comment %></p>
+
+            <% if review.image.attached? %>
+              <div class="mt-3 text-center">
+                <%= image_tag url_for(review.image), class: "img-fluid rounded", style: "max-height: 250px; border: 1px solid #ccc;" %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      <% else %>
+        <p class="text-muted text-center">No reviews yet for this Dewback.</p>
+      <% end %>
+    </div>
+  </div>
+
+</div>

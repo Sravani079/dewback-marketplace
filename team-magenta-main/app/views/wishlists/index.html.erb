@@ -1,0 +1,41 @@
+<div class="container mt-5">
+  <h2 class="text-center mb-4 fw-bold">💖 My Wishlist</h2>
+
+  <% if @wishlisted_dewbacks.any? %>
+    <div class="row g-4">
+      <% @wishlisted_dewbacks.each do |dewback| %>
+        <div class="col-lg-4 col-md-6">
+          <div class="card h-100 shadow-sm border-0">
+            
+            <% if dewback.image.present? %>
+              <%= link_to dewback_path(dewback) do %>
+                <%= image_tag dewback.image,
+                              alt: dewback.title,
+                              class: "card-img-top",
+                              style: "object-fit: cover; height: 200px; width: 100%;" %>
+              <% end %>
+            <% end %>
+
+            <div class="card-body">
+              <h5 class="card-title text-primary">
+                <%= link_to dewback.title, dewback_path(dewback), class: "text-decoration-none stretched-link" %>
+              </h5>
+              <p class="card-text text-muted"><%= truncate(dewback.description, length: 80) %></p>
+            </div>
+
+            <div class="card-footer bg-white border-top-0 d-flex justify-content-between align-items-center">
+              <span class="fw-semibold text-success"><%= number_to_currency(dewback.price) %></span>
+              <%= link_to 'View', dewback_path(dewback), class: 'btn btn-sm btn-outline-primary' %>
+            </div>
+
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="text-center mt-5">
+      <p class="text-muted fs-5">Your wishlist is currently empty.</p>
+      <%= link_to "Browse Dewbacks", catalog_index_path, class: "btn btn-outline-success mt-2" %>
+    </div>
+  <% end %>
+</div>
